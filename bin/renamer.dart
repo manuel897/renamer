@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/args.dart';
 
 const String version = '0.0.1';
@@ -24,7 +26,7 @@ ArgParser buildParser() {
 }
 
 void printUsage(ArgParser argParser) {
-  print('Usage: dart renamer.dart <flags> [arguments]');
+  print('Usage: dart renamer.dart <path>');
   print(argParser.usage);
 }
 
@@ -52,6 +54,37 @@ void main(List<String> arguments) {
     if (verbose) {
       print('[VERBOSE] All arguments: ${results.arguments}');
     }
+
+    if (results.arguments.length != 1) {
+      throw FormatException(
+          '1 positional argument is expected. ${results.arguments.length} found.');
+    }
+
+    var entryPath = results.arguments.single;
+
+    // renamer util class
+    try {
+      final entryDir = Directory(entryPath);
+      if (!entryDir.existsSync()) {
+        print('Specified path $entryPath does not exist.');
+        return;
+      }
+      print(entryDir.listSync());
+    } on PathAccessException catch (e) {
+      print('Path $entryPath is inaccessible.');
+      print(e);
+    } catch (e) {
+      if (e == PathAccessException) {
+        print('Path $entryPath is inaccessible.');
+      }
+    }
+
+    // var systemTempDir = Directory.systemTemp;
+    // systemTempDir
+    //     .list(recursive: true, followLinks: false)
+    //     .listen((FileSystemEntity e) {
+    //   print(e.path);
+    // });
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
