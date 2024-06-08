@@ -26,7 +26,7 @@ ArgParser buildParser() {
 }
 
 void printUsage(ArgParser argParser) {
-  print('Usage: dart renamer.dart <path>');
+  print('Usage: dart renamer.dart <path> <ignore item 1> <ignore item 2> ...');
   print(argParser.usage);
 }
 
@@ -50,26 +50,40 @@ void main(List<String> arguments) {
     }
 
     // Act on the arguments provided.
-    print('Positional arguments: ${results.rest}');
+    // print('Positional arguments: ${results.rest}');
     if (verbose) {
       print('[VERBOSE] All arguments: ${results.arguments}');
     }
 
-    if (results.arguments.length != 1) {
+    if (results.arguments.isEmpty) {
       throw FormatException(
           '1 positional argument is expected. ${results.arguments.length} found.');
     }
 
-    var entryPath = results.arguments.single;
+    var entryPath = results.arguments.first;
 
-    // renamer util class
     try {
       final entryDir = Directory(entryPath);
       if (!entryDir.existsSync()) {
         print('Specified path $entryPath does not exist.');
         return;
       }
-      print(entryDir.listSync());
+      var itemList = entryDir.listSync();
+
+      final ignoreList = results.arguments.sublist(1);
+      print("Ignoring: $ignoreList");
+      for (final item in ignoreList) {
+        itemList.removeWhere((e) => e.path.contains(item));
+      }
+      for (final FileSystemEntity item in itemList) {
+        if (item is File) {
+          print("${item.path} is a file");
+        } else if (item is Directory) {
+          print("${item.path} is a directory");
+        } else {
+          print("${item.path} is something else");
+        }
+      }
     } on PathAccessException catch (e) {
       print('Path $entryPath is inaccessible.');
       print(e);
