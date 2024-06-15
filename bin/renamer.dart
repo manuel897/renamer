@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
+import 'renamer_helper.dart';
+
 const String version = '0.0.1';
 
 ArgParser buildParser() {
@@ -72,33 +74,23 @@ void main(List<String> arguments) {
 
       final ignoreList = results.arguments.sublist(1);
       print("Ignoring: $ignoreList");
+
       for (final item in ignoreList) {
         itemList.removeWhere((e) => e.path.contains(item));
       }
       for (final FileSystemEntity item in itemList) {
         if (item is File) {
-          print("${item.path} is a file");
+          print("FILE: ${RenamerHelper().getNameWithExtension(item.path)}");
         } else if (item is Directory) {
-          print("${item.path} is a directory");
+          print("DIR: ${RenamerHelper().getNameWithExtension(item.path)}");
         } else {
-          print("${item.path} is something else");
+          print("OTHER: ${RenamerHelper().getNameWithExtension(item.path)}");
         }
       }
     } on PathAccessException catch (e) {
       print('Path $entryPath is inaccessible.');
       print(e);
-    } catch (e) {
-      if (e == PathAccessException) {
-        print('Path $entryPath is inaccessible.');
-      }
     }
-
-    // var systemTempDir = Directory.systemTemp;
-    // systemTempDir
-    //     .list(recursive: true, followLinks: false)
-    //     .listen((FileSystemEntity e) {
-    //   print(e.path);
-    // });
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
