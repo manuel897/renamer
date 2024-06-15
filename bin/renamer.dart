@@ -79,13 +79,20 @@ void main(List<String> arguments) {
         itemList.removeWhere((e) => e.path.contains(item));
       }
       for (final FileSystemEntity item in itemList) {
-        if (item is File) {
-          print("FILE: ${RenamerHelper().getNameWithExtension(item.path)}");
-        } else if (item is Directory) {
-          print("DIR: ${RenamerHelper().getNameWithExtension(item.path)}");
-        } else {
-          print("OTHER: ${RenamerHelper().getNameWithExtension(item.path)}");
+        final name = RenamerHelper().getNameWithExtension(item.path);
+        //
+        if (name != null) {
+          print(RenamerHelper()
+              .transformString(name, NamingPattern.upperCamelCase));
         }
+        //
+        // if (item is File) {
+        //   print("FILE: ${RenamerHelper().getNameWithExtension(item.path)}");
+        // } else if (item is Directory) {
+        //   print("DIR: ${RenamerHelper().getNameWithExtension(item.path)}");
+        // } else {
+        //   print("OTHER: ${RenamerHelper().getNameWithExtension(item.path)}");
+        // }
       }
     } on PathAccessException catch (e) {
       print('Path $entryPath is inaccessible.');
