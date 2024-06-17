@@ -82,8 +82,10 @@ void main(List<String> arguments) {
         final name = RenamerHelper().getNameWithExtension(item.path);
         //
         if (name != null) {
-          print(RenamerHelper()
-              .transformString(name, NamingPattern.upperCamelCase));
+          print(
+              "camel ${RenamerHelper().transformString(name, NamingPattern.upperCamelCase)}");
+          print(
+              "snake ${RenamerHelper().transformString(name, NamingPattern.upperSnakeCase)}");
         }
         //
         // if (item is File) {

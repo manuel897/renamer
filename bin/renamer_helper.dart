@@ -13,18 +13,45 @@ class RenamerHelper {
     var result = "";
     var parts = _splitString(inputString);
 
-    if (namingPattern == NamingPattern.upperCamelCase) {
-      for (var part in parts) {
-        part = part.toLowerCase();
-        result = result +
-            part[0].toUpperCase() +
-            part.substring(
-              1,
-            );
-      }
+    // use a dict to map naming pattern to separator and capitalization options
+    switch (namingPattern) {
+      case NamingPattern.upperCamelCase:
+        for (var part in parts) {
+          part = part.toLowerCase();
+          result = result +
+              part[0].toUpperCase() +
+              part.substring(
+                1,
+              );
+        }
+      case NamingPattern.upperSnakeCase:
+        parts = _addSeparatorInString(parts, "_");
+        for (var part in parts) {
+          part = part.toLowerCase();
+          result = result + _capitaliseFirstLetter(part);
+        }
     }
     return result.isEmpty ? inputString : result;
   }
+
+  /// add a separator between given strings
+  List<String> _addSeparatorInString(List<String> inputList, String separator) {
+    final List<String> result = [];
+    for (int i = 0; i < inputList.length; i++) {
+      result.add(inputList[i]);
+      if (i != inputList.length - 1) {
+        result.add(separator);
+      }
+    }
+    return result;
+  }
+
+  String _capitaliseFirstLetter(String input) => input.isNotEmpty
+      ? input[0].toUpperCase() +
+          input.substring(
+            1,
+          )
+      : "";
 
   /// split a string if it is separated by space, - or _
   List<String> _splitString(String inputString) {
