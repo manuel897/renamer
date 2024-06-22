@@ -13,12 +13,14 @@ ArgParser buildParser() {
       abbr: 'h',
       negatable: false,
       help: 'Print this usage information.',
-    )..addFlag(
+    )
+    ..addFlag(
       'verbose',
       abbr: 'v',
       negatable: false,
       help: 'Show additional command output.',
-    )..addFlag(
+    )
+    ..addFlag(
       'version',
       negatable: false,
       help: 'Print the tool version.',
@@ -51,15 +53,13 @@ void main(List<String> arguments) {
     }
 
     // Act on the arguments provided.
-    // print('Positional arguments: ${results.rest}');
     if (verbose) {
       stdout.writeln('[VERBOSE] All arguments: ${results.arguments}');
     }
 
     if (results.arguments.isEmpty) {
       throw FormatException(
-          '1 positional argument is expected. ${results.arguments
-              .length} found.');
+          '1 positional argument is expected. ${results.arguments.length} found.');
     }
 
     var entryPath = results.arguments.first;
@@ -83,6 +83,7 @@ void main(List<String> arguments) {
       stdout.writeln("Please specify a naming pattern:");
       stdout.writeln("1 = upper camel case (JaneDoe) [default]");
       stdout.writeln("2 = upper snake case (Jane_Doe)");
+      stdout.writeln("3 = upper kebab case (Jane-Doe)");
       final input = stdin.readLineSync();
       var namingPattern = NamingPattern.upperCamelCase;
       switch (input) {
@@ -92,6 +93,9 @@ void main(List<String> arguments) {
         case "2":
           stdout.writeln('Selected upper snake case');
           namingPattern = NamingPattern.upperSnakeCase;
+        case "3":
+          stdout.writeln('Selected upper kebab case');
+          namingPattern = NamingPattern.upperKebabCase;
         default:
           stdout.writeln('Selected upper camel case');
           break;
@@ -102,8 +106,7 @@ void main(List<String> arguments) {
 
         if (name != null) {
           stdout.writeln(
-              "$name -> ${RenamerHelper().transformString(
-                  name, namingPattern)}");
+              "$name -> ${RenamerHelper().transformString(name, namingPattern)}");
         }
       }
     } on PathAccessException catch (e) {

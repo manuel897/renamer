@@ -13,24 +13,13 @@ class RenamerHelper {
     var result = "";
     var parts = _splitString(inputString);
 
-    // use a dict to map naming pattern to separator and capitalization options
-    switch (namingPattern) {
-      case NamingPattern.upperCamelCase:
-        for (var part in parts) {
-          part = part.toLowerCase();
-          result = result +
-              part[0].toUpperCase() +
-              part.substring(
-                1,
-              );
-        }
-      case NamingPattern.upperSnakeCase:
-        parts = _addSeparatorInString(parts, "_");
-        for (var part in parts) {
-          part = part.toLowerCase();
-          result = result + _capitaliseFirstLetter(part);
-        }
+    final String separator = namingPatternSeparator[namingPattern] ?? "";
+    parts = _addSeparatorInString(parts, separator);
+    for (var part in parts) {
+      part = part.toLowerCase();
+      result = result + _capitaliseFirstLetter(part);
     }
+
     return result.isEmpty ? inputString : result;
   }
 
@@ -80,5 +69,12 @@ class RenamerHelper {
 
 enum NamingPattern {
   upperCamelCase,
-  upperSnakeCase;
+  upperSnakeCase,
+  upperKebabCase;
 }
+
+const Map<NamingPattern, String> namingPatternSeparator = {
+  NamingPattern.upperCamelCase: "",
+  NamingPattern.upperSnakeCase: "_",
+  NamingPattern.upperKebabCase: "-",
+};
