@@ -10,12 +10,12 @@ class RenamerHelper {
 
   /// transform a strings to a known pattern
   String transformString(String inputString, NamingPattern namingPattern) {
-    var result = "";
-    var parts = _splitString(inputString);
+    String result = "";
+    List<String> parts = _splitString(inputString);
 
     final String separator = namingPatternSeparator[namingPattern] ?? "";
     parts = _addSeparatorInString(parts, separator);
-    for (var part in parts) {
+    for (String part in parts) {
       part = part.toLowerCase();
       result = result + _capitaliseFirstLetter(part);
     }

@@ -62,21 +62,21 @@ void main(List<String> arguments) {
           '1 positional argument is expected. ${results.arguments.length} found.');
     }
 
-    var entryPath = results.arguments.first;
+    final String entryPath = results.arguments.first;
 
     try {
-      final entryDir = Directory(entryPath);
+      final Directory entryDir = Directory(entryPath);
       if (!entryDir.existsSync()) {
         stdout.writeln('Specified path $entryPath does not exist.');
         return;
       }
 
-      var itemList = entryDir.listSync();
+      final List<FileSystemEntity> itemList = entryDir.listSync();
 
-      final ignoreList = results.arguments.sublist(1);
+      final List<String> ignoreList = results.arguments.sublist(1);
       stdout.writeln("Ignoring: $ignoreList");
 
-      for (final item in ignoreList) {
+      for (final String item in ignoreList) {
         itemList.removeWhere((e) => e.path.contains(item));
       }
 
@@ -84,8 +84,8 @@ void main(List<String> arguments) {
       stdout.writeln("1 = upper camel case (JaneDoe) [default]");
       stdout.writeln("2 = upper snake case (Jane_Doe)");
       stdout.writeln("3 = upper kebab case (Jane-Doe)");
-      final input = stdin.readLineSync();
-      var namingPattern = NamingPattern.upperCamelCase;
+      final String? input = stdin.readLineSync();
+      NamingPattern namingPattern = NamingPattern.upperCamelCase;
       switch (input) {
         case "1":
           stdout.writeln('Selected upper camel case');
