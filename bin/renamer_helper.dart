@@ -45,19 +45,10 @@ class RenamerHelper {
   /// split a string if it is separated by space, - or _
   List<String> _splitString(String inputString) {
     final List<String> result = [];
-    String? splitter;
-    if (inputString.contains(" ")) {
-      splitter = " ";
-    } else if (inputString.contains("_")) {
-      splitter = " ";
-    } else if (inputString.contains("-")) {
-      splitter = " ";
-    }
-    if (splitter != null) {
-      var splitStrings = inputString.trim().split(splitter);
-      splitStrings.removeWhere((e) => e.isEmpty);
-      result.addAll(splitStrings);
-    }
+
+    final List<String> splitStrings = inputString.trim().split(RegExp(" |-|_"));
+    result.addAll(splitStrings);
+
     return result;
   }
 
